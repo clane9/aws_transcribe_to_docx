@@ -16,7 +16,7 @@ Produce Word Document, CSV, SQLite and VTT transcriptions using the automatic sp
 # Installation
 
 ```bash
-pip install tscribe
+pip install git+https://github.com/clane9/aws_transcribe_to_docx
 ```
 
 
