@@ -67,7 +67,7 @@ def calculate_confidence_statistics(data: dict) -> dict:
 
             stats["timestamps"].append(float(item["start_time"]))
 
-            confidence_decimal = float(item["alternatives"][0]["confidence"])
+            confidence_decimal = float(item["alternatives"][0].get("confidence", 0.0))
             confidence_integer = int(confidence_decimal * 100)
 
             stats["accuracy"].append(confidence_integer)
@@ -151,7 +151,7 @@ def decode_transcript_to_dataframe(data: str):
                         )
                     )
                     result = sorted(
-                        word_result[-1]["alternatives"], key=lambda x: x["confidence"]
+                        word_result[-1]["alternatives"], key=lambda x: x.get("confidence", 0.0)
                     )[-1]
 
                     # Write the word
@@ -195,7 +195,7 @@ def decode_transcript_to_dataframe(data: str):
                 and decoded_data["speaker"][-1] == channel
             ):
                 current_word = sorted(
-                    word["alternatives"], key=lambda x: x["confidence"]
+                    word["alternatives"], key=lambda x: x.get("confidence", 0.0)
                 )[-1]
                 decoded_data["comment"][-1] += " " + current_word["content"]
 
@@ -207,7 +207,7 @@ def decode_transcript_to_dataframe(data: str):
                 decoded_data["end_time"].append(convert_time_stamp(word["end_time"]))
                 decoded_data["speaker"].append(channel)
                 current_word = sorted(
-                    word["alternatives"], key=lambda x: x["confidence"]
+                    word["alternatives"], key=lambda x: x.get("confidence", 0.0)
                 )[-1]
                 decoded_data["comment"].append(current_word["content"])
 
@@ -243,7 +243,7 @@ def decode_transcript_to_dataframe(data: str):
         for word in data["results"]["items"]:
 
             # Get the word with the highest confidence
-            result = sorted(word["alternatives"], key=lambda x: x["confidence"])[-1]
+            result = sorted(word["alternatives"], key=lambda x: x.get("confidence", 0.0))[-1]
 
             # Write the word
             decoded_data["comment"][-1] += " " + result["content"]
@@ -405,12 +405,12 @@ def write_docx(data, filename, **kwargs):
                         )
                     )
                     result = sorted(
-                        word_result[-1]["alternatives"], key=lambda x: x["confidence"]
+                        word_result[-1]["alternatives"], key=lambda x: x.get("confidence", 0.0)
                     )[-1]
 
                     # Write the word
                     run = row_cells[2].paragraphs[0].add_run(" " + result["content"])
-                    if float(result["confidence"]) < threshold_for_grey:
+                    if float(result.get("confidence", 0.0)) < threshold_for_grey:
                         font = run.font
                         font.color.rgb = RGBColor(204, 204, 204)
 
@@ -450,7 +450,7 @@ def write_docx(data, filename, **kwargs):
             # If still on the same channel, add the current word to the line
             if table.cell(-1, 1).text == channel:
                 current_word = sorted(
-                    word["alternatives"], key=lambda x: x["confidence"]
+                    word["alternatives"], key=lambda x: x.get("confidence", 0.0)
                 )[-1]
 
                 run = (
@@ -458,14 +458,14 @@ def write_docx(data, filename, **kwargs):
                     .paragraphs[0]
                     .add_run(" " + current_word["content"])
                 )
-                if float(current_word["confidence"]) < threshold_for_grey:
+                if float(current_word.get("confidence", 0.0)) < threshold_for_grey:
                     font = run.font
                     font.color.rgb = RGBColor(204, 204, 204)
 
             # Else start a new line
             else:
                 current_word = sorted(
-                    word["alternatives"], key=lambda x: x["confidence"]
+                    word["alternatives"], key=lambda x: x.get("confidence", 0.0)
                 )[-1]
 
                 row_cells = table.add_row().cells
@@ -473,7 +473,7 @@ def write_docx(data, filename, **kwargs):
                 row_cells[1].text = channel
 
                 run = row_cells[2].paragraphs[0].add_run(" " + current_word["content"])
-                if float(current_word["confidence"]) < threshold_for_grey:
+                if float(current_word.get("confidence", 0.0)) < threshold_for_grey:
                     font = run.font
                     font.color.rgb = RGBColor(204, 204, 204)
 
@@ -501,11 +501,11 @@ def write_docx(data, filename, **kwargs):
         for word in data["results"]["items"]:
 
             # Get the word with the highest confidence
-            result = sorted(word["alternatives"], key=lambda x: x["confidence"])[-1]
+            result = sorted(word["alternatives"], key=lambda x: x.get("confidence", 0.0))[-1]
 
             # Write the word
             run = row_cells[2].paragraphs[0].add_run(" " + result["content"])
-            if float(result["confidence"]) < threshold_for_grey:
+            if float(result.get("confidence", 0.0)) < threshold_for_grey:
                 font = run.font
                 font.color.rgb = RGBColor(204, 204, 204)
 
