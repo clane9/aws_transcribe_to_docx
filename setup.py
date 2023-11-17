@@ -22,4 +22,9 @@ setuptools.setup(
         "Programming Language :: Python :: 3.8",
         "Operating System :: OS Independent",
     ],
+    entry_points={
+        "console_scripts": [
+            "tscribe = tscribe.__main__:main",
+        ]
+    }   ,
 )

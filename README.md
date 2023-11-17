@@ -44,6 +44,18 @@ tscribe.write("output.json")
 output.docx written in x seconds.
 ```
 
+You can also use `tscribe` from the command line.
+
+```bash
+tscribe output.json
+```
+
+See the help message for more details.
+
+```bash
+tscribe -h
+```
+
 ## Output formats
 
 Supported output formats include:
@@ -66,7 +78,7 @@ output.db written in x seconds.
 output.vtt written in x seconds.
 ```
 
-## Target directory or filename 
+## Target directory or filename
 
 You may wish to be explicit in specifying the output filename or directory written to. Use cases may include following a naming convention or operating in a serverless environment.
 
